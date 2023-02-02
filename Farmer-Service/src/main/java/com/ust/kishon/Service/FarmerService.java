@@ -13,7 +13,6 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -28,16 +27,15 @@ public class FarmerService {
     @Autowired
     PasswordEncoder passwordEncoder;
     private static final Logger logger = LoggerFactory.getLogger(FarmerService.class);
-
-    public Farmer addFarmer(Farmer farmer) {
+    public Farmer addFarmer(Farmer farmer){
         logger.info("Inside the FarmerService and RegisterFarmer Method");
         Optional<Farmer> existingPhone = Optional.ofNullable(farmerRepo.findByPhone(farmer.getPhone()));
         Optional<Farmer> existingUserName = farmerRepo.findByUsername(farmer.getUsername());
 
         if (existingPhone.isPresent()) {
-            throw new FarmerNotFoundException("farmer", "Phone", farmer.getPhone());
-        } else if (existingUserName.isPresent()) {
-            throw new FarmerNotFoundException("Farmer", "Phone", farmer.getUsername());
+            throw new FarmerNotFoundException("farmer","Phone",farmer.getPhone());
+        } else if (existingUserName.isPresent()){
+            throw new FarmerNotFoundException("Farmer","Phone",farmer.getUsername());
         }
 
         SimpleMailMessage message = new SimpleMailMessage();
@@ -61,7 +59,7 @@ public class FarmerService {
         return farmerRepo.save(farmer);
     }
 
-    public String deleteFarmer(int id) {
+    public String deleteFarmer(int id){
         logger.info("Inside the FarmerService and Delete Method");
         SimpleMailMessage message = new SimpleMailMessage();
         Farmer farmer = farmerRepo.findById(id).orElseThrow(() ->
@@ -74,41 +72,37 @@ public class FarmerService {
         farmerRepo.deleteById(id);
         return "Farmer Deleted";
     }
-
-    public Farmer getfarmerById(int farmerId) {
+    public Farmer getfarmerById(int farmerId){
         logger.info("Inside the FarmerService and getfarmerById Method");
 
-        Farmer farmer = this.farmerRepo.findById(farmerId).orElseThrow(() -> new
-                FarmerNotFoundException("Farmer", "Id", farmerId));
+        Farmer farmer=this.farmerRepo.findById(farmerId).orElseThrow(()-> new
+                FarmerNotFoundException("Farmer","Id",farmerId));
         return farmer;
     }
-
     public List<Product> getProductDetailsUsingFarmerId(int farmerId) {
         logger.info("Inside the FarmerService and getProductDetailUsingFarmer Method");
 
-        Farmer farmer = this.farmerRepo.findById(farmerId).
-                orElseThrow(() -> new FarmerNotFoundException("Farmer", "Id", farmerId));
+        Farmer farmer=this.farmerRepo.findById(farmerId).
+                orElseThrow(()-> new FarmerNotFoundException("Farmer","Id",farmerId));
         return pRepo.findAll();
     }
-
-    public Farmer updateFarmer(int farmerId, Farmer farmer) {
+    public Farmer updateFarmer(int farmerId, Farmer farmer){
         logger.info("Inside the FarmerService and updateFarmer Method");
         Farmer f = new Farmer();
         Farmer findById = this.farmerRepo.findById(farmerId)
-                .orElseThrow(() -> new FarmerNotFoundException("Farmer", "id", farmerId));
-        f.setId(farmerId);
-        f.setAccountno(farmer.getAccountno());
-        f.setAddress(farmer.getAddress());
-        f.setEmail(farmer.getEmail());
-        f.setAdharno(farmer.getAdharno());
-        f.setEnabled(farmer.isEnabled());
-        f.setIfcno(farmer.getIfcno());
-        f.setPhone(farmer.getPhone());
-        f.setRoles(farmer.getRoles());
-        f.setUpi(farmer.getUpi());
-        f.setUsername(farmer.getUsername());
-        f.setPassword(farmer.getPassword());
-
+                .orElseThrow(()-> new FarmerNotFoundException("Farmer","id",farmerId));
+            f.setId(farmerId);
+            f.setAccountno(farmer.getAccountno());
+            f.setAddress(farmer.getAddress());
+            f.setEmail(farmer.getEmail());
+            f.setAdharno(farmer.getAdharno());
+            f.setEnabled(farmer.isEnabled());
+            f.setIfcno(farmer.getIfcno());
+            f.setPhone(farmer.getPhone());
+            f.setRoles(farmer.getRoles());
+            f.setUpi(farmer.getUpi());
+            f.setUsername(farmer.getUsername());
+            f.setPassword(farmer.getPassword());
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(farmer.getEmail());
         message.setSubject("Your details are registered in Kishan Application");
@@ -126,11 +120,9 @@ public class FarmerService {
                 "\nUPI : " + f.getUpi()
         );
         javaMailSender.send(message);
-
-        return farmerRepo.save(f);
+        return  farmerRepo.save(f);
     }
-
-    public Farmer findFarmerByPhone(String phone) {
+  public  Farmer findFarmerByPhone(String phone){
         return farmerRepo.findByPhone(phone);
 
     }

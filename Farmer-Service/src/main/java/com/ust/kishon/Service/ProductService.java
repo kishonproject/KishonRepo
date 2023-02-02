@@ -22,7 +22,6 @@ public class ProductService {
     @Autowired
     private JavaMailSender javaMailSender;
 
-
     public Product submitProduct( Product product,int farmerId){
         logger.info("Inside the ProductService and submitProduct Method");
         Product prd= farmerRepo.findById(farmerId).map(farmer -> {
@@ -90,8 +89,6 @@ public class ProductService {
         javaMailSender.send(message);
 
         return  productRepo.save(product);
-
-
     }
 
     public String deleteProduct(int productId) {
